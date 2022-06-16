@@ -148,17 +148,18 @@ impl ObjectImpl for ProgressBin {
         // Add the progressreport element to the bin.
         obj.add(&self.progress).unwrap();
 
-        // Then set the ghost pad targets to the corresponding pads of the progressreport element.
-        self.sinkpad
-            .set_target(Some(&self.progress.static_pad("sink").unwrap()))
-            .unwrap();
-        self.srcpad
-            .set_target(Some(&self.progress.static_pad("src").unwrap()))
-            .unwrap();
+        //cam
+        // // Then set the ghost pad targets to the corresponding pads of the progressreport element.
+        // self.sinkpad
+        //     .set_target(Some(&self.progress.static_pad("sink0").unwrap()))
+        //     .unwrap();
+        // self.srcpad
+        //     .set_target(Some(&self.progress.static_pad("src").unwrap()))
+        //     .unwrap();
 
-        // And finally add the two ghostpads to the bin.
-        obj.add_pad(&self.sinkpad).unwrap();
-        obj.add_pad(&self.srcpad).unwrap();
+        // // And finally add the two ghostpads to the bin.
+        // obj.add_pad(&self.sinkpad).unwrap();
+        // obj.add_pad(&self.srcpad).unwrap();
     }
 }
 
