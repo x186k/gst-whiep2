@@ -34,7 +34,7 @@ static CAT: Lazy<gst::DebugCategory> = Lazy::new(|| {
 // Struct containing all the element data
 pub struct ProgressBin {
     progress: gst::Element,
-    srcpad: gst::GhostPad,
+   // srcpad: gst::GhostPad,
     sinkpad: gst::GhostPad,
     // We put the output_type property behind a mutex, as we want
     // change it in the set_property function, which can be called
@@ -61,8 +61,8 @@ impl ObjectSubclass for ProgressBin {
         // We do that and adding the pads inside glib::Object::constructed() later.
         let templ = klass.pad_template("sink").unwrap();
         let sinkpad = gst::GhostPad::from_template(&templ, Some("sink"));
-        let templ = klass.pad_template("src").unwrap();
-        let srcpad = gst::GhostPad::from_template(&templ, Some("src"));
+        // let templ = klass.pad_template("src").unwrap();
+        // let srcpad = gst::GhostPad::from_template(&templ, Some("src"));
 
         // Create the progressreport element.
         let progress = gst::ElementFactory::make("webrtcbin", Some("progress")).unwrap();
@@ -72,7 +72,7 @@ impl ObjectSubclass for ProgressBin {
         // Return an instance of our struct
         Self {
             progress,
-            srcpad,
+           // srcpad,
             sinkpad,
             output_type: Mutex::new(ProgressBinOutput::Println),
         }
@@ -158,7 +158,7 @@ impl ObjectImpl for ProgressBin {
         //     .unwrap();
 
         // // And finally add the two ghostpads to the bin.
-        // obj.add_pad(&self.sinkpad).unwrap();
+        obj.add_pad(&self.sinkpad).unwrap();
         // obj.add_pad(&self.srcpad).unwrap();
     }
 }
@@ -193,14 +193,14 @@ impl ElementImpl for ProgressBin {
     fn pad_templates() -> &'static [gst::PadTemplate] {
         static PAD_TEMPLATES: Lazy<Vec<gst::PadTemplate>> = Lazy::new(|| {
             // Our element can accept any possible caps on both pads
-            let caps = gst::Caps::new_any();
-            let src_pad_template = gst::PadTemplate::new(
-                "src",
-                gst::PadDirection::Src,
-                gst::PadPresence::Always,
-                &caps,
-            )
-            .unwrap();
+            let caps = gst::Caps::builder("application/x-rtp").build();
+            // let src_pad_template = gst::PadTemplate::new(
+            //     "src",
+            //     gst::PadDirection::Src,
+            //     gst::PadPresence::Always,
+            //     &caps,
+            // )
+            // .unwrap();
 
             let sink_pad_template = gst::PadTemplate::new(
                 "sink",
@@ -210,7 +210,8 @@ impl ElementImpl for ProgressBin {
             )
             .unwrap();
 
-            vec![src_pad_template, sink_pad_template]
+            //vec![src_pad_template, sink_pad_template]
+            vec![sink_pad_template]
         });
 
         PAD_TEMPLATES.as_ref()
